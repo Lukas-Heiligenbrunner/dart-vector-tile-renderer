@@ -1,3 +1,5 @@
+import 'package:vector_tile_renderer/src/logger.dart';
+
 import 'geometry_model.dart';
 
 enum _Command {
@@ -152,13 +154,16 @@ Iterable<TilePolygon> decodePolygons(List<int> geometry) sync* {
     );
     assert(_decodeCommandLength(closePathCommand) == 1);
 
-    assert(a != 0);
+    if(a == 0){
+      continue;
+    }
+
     if (a.isNegative) {
       // We just decoded an interior ring.
 
+      rings ??= [];
       // Add the ring to the current polygon.
-      assert(rings != null);
-      rings!.add(TileLine(points));
+      rings.add(TileLine(points));
     } else {
       // We just decoded an exterior ring.
 
